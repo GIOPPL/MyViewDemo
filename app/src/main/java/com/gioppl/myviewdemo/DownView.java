@@ -45,6 +45,7 @@ public class DownView extends View {
     //四大控制点,动画value
     private int controllerValue=0;
     private long theAnimationExecuteTime=1000;
+    private int controllerValue2=0;
 
     public DownView(Context context) {
         super(context);
@@ -230,16 +231,31 @@ public class DownView extends View {
     }
     //让圆形上部分展开
     private void addCircleToLineAnimation_1() {
+        AnimatorSet lineAnimatorSet=new AnimatorSet();
+
         ValueAnimator controllerPointAnimation1=ValueAnimator.ofInt(0, (int) (pointCircle.getR()*2));
         controllerPointAnimation1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
+                if (controllerValue>=pointCircle.getR()*2-1){
+                    circleLinePath.close();
+                    circleLinePath.reset();
+                }
                 controllerValue= (int) animation.getAnimatedValue();
                 invalidate();
             }
         });
         controllerPointAnimation1.setDuration(theAnimationExecuteTime);
         controllerPointAnimation1.start();
+//        ValueAnimator controllerPointAnimation2=ValueAnimator.ofInt(0, (int) (pointCircle.getR()*2+10));
+//        controllerPointAnimation1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                controllerValue2= (int) animation.getAnimatedValue();
+//                invalidate();
+//            }
+//        });
+//        controllerPointAnimation1.setDuration(theAnimationExecuteTime);
     }
     //让圆形上部分展开后向上突起
     private void addCircleToLineAnimation_2() {

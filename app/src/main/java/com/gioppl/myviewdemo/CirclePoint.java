@@ -14,6 +14,10 @@ public class CirclePoint {
         this.x = x;
         this.y = y;
     }
+    public void  setCirclePoint(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
 
     public float getX() {
         return x;

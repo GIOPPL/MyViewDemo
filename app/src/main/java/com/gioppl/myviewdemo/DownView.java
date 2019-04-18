@@ -41,6 +41,11 @@ public class DownView extends View {
     private int radius = 0;
     private RectF mCircleRectF;
 
+
+    //四大控制点,动画value
+    private int controllerValue=0;
+    private long theAnimationExecuteTime=1000;
+
     public DownView(Context context) {
         super(context);
         Log.i("DownView", "1");
@@ -102,29 +107,15 @@ public class DownView extends View {
 
         pointCircle = new CirclePoint(500, 500, 200);
         points=new ArrayList<>();
-//        CirclePoint point1 = new CirclePoint(pointCircle.getX(), pointCircle.getY() - pointCircle.getR());
-//        CirclePoint point2 = new CirclePoint(pointCircle.getX() - pointCircle.getR(), pointCircle.getY() - pointCircle.getR());
-//        CirclePoint point3 = new CirclePoint(pointCircle.getX() - pointCircle.getR(), pointCircle.getY());
-//        CirclePoint point4 = new CirclePoint(pointCircle.getX() - pointCircle.getR(), pointCircle.getY() + pointCircle.getR());
-//        CirclePoint point5 = new CirclePoint(pointCircle.getX(), pointCircle.getY() + pointCircle.getR());
-//        CirclePoint point6 = new CirclePoint(pointCircle.getX() + pointCircle.getR(), pointCircle.getY() + pointCircle.getR());
-//        CirclePoint point7 = new CirclePoint(pointCircle.getX() + pointCircle.getR(), pointCircle.getY());
-//        CirclePoint point8 = new CirclePoint(pointCircle.getX() + pointCircle.getR(), pointCircle.getY() - pointCircle.getR());
-//
-
-
         CirclePoint point0 = new CirclePoint(pointCircle.getX(), pointCircle.getY() - pointCircle.getR());
-        CirclePoint point1 = new CirclePoint(pointCircle.getX()-pointCircle.getR()/2, pointCircle.getY() - pointCircle.getR());
-        CirclePoint point2 = new CirclePoint(pointCircle.getX()-pointCircle.getR(), pointCircle.getY() - pointCircle.getR()/2);
-        CirclePoint point3 = new CirclePoint(pointCircle.getX()-pointCircle.getR(), pointCircle.getY());
-        CirclePoint point4 = new CirclePoint(pointCircle.getX()-pointCircle.getR(),pointCircle.getY()+pointCircle.getR()/2);
-        CirclePoint point5 = new CirclePoint(pointCircle.getX()-pointCircle.getR()/2, pointCircle.getY()+pointCircle.getR());
-        CirclePoint point6= new CirclePoint(pointCircle.getX(), pointCircle.getY()+pointCircle.getR());
-        CirclePoint point7 = new CirclePoint(pointCircle.getX()+pointCircle.getR()/2, pointCircle.getY()+pointCircle.getR());
-        CirclePoint point8 = new CirclePoint(pointCircle.getX()+pointCircle.getR(), pointCircle.getY()+pointCircle.getR()/2);
-        CirclePoint point9 = new CirclePoint(pointCircle.getX()+pointCircle.getR(), pointCircle.getY());
-        CirclePoint point10 = new CirclePoint(pointCircle.getX()+pointCircle.getR(), pointCircle.getY()-pointCircle.getR()/2);
-        CirclePoint point11 = new CirclePoint(pointCircle.getX()+pointCircle.getR()/2, pointCircle.getY()-pointCircle.getR());
+        CirclePoint point1 = new CirclePoint(pointCircle.getX() - pointCircle.getR(), pointCircle.getY() - pointCircle.getR());
+        CirclePoint point2 = new CirclePoint(pointCircle.getX() - pointCircle.getR(), pointCircle.getY());
+        CirclePoint point3 = new CirclePoint(pointCircle.getX() - pointCircle.getR(), pointCircle.getY() + pointCircle.getR());
+        CirclePoint point4 = new CirclePoint(pointCircle.getX(), pointCircle.getY() + pointCircle.getR());
+        CirclePoint point5 = new CirclePoint(pointCircle.getX() + pointCircle.getR(), pointCircle.getY() + pointCircle.getR());
+        CirclePoint point6 = new CirclePoint(pointCircle.getX() + pointCircle.getR(), pointCircle.getY());
+        CirclePoint point7 = new CirclePoint(pointCircle.getX() + pointCircle.getR(), pointCircle.getY() - pointCircle.getR());
+        CirclePoint point8 = new CirclePoint(pointCircle.getX(), pointCircle.getY() - pointCircle.getR());
         points.add(point0);
         points.add(point1);
         points.add(point2);
@@ -134,9 +125,34 @@ public class DownView extends View {
         points.add(point6);
         points.add(point7);
         points.add(point8);
-        points.add(point9);
-        points.add(point10);
-        points.add(point11);
+
+
+
+
+//        CirclePoint point0 = new CirclePoint(pointCircle.getX(), pointCircle.getY() - pointCircle.getR());
+//        CirclePoint point1 = new CirclePoint(pointCircle.getX()-pointCircle.getR()/2, pointCircle.getY() - pointCircle.getR());
+//        CirclePoint point2 = new CirclePoint(pointCircle.getX()-pointCircle.getR(), pointCircle.getY() - pointCircle.getR()/2);
+//        CirclePoint point3 = new CirclePoint(pointCircle.getX()-pointCircle.getR(), pointCircle.getY());
+//        CirclePoint point4 = new CirclePoint(pointCircle.getX()-pointCircle.getR(),pointCircle.getY()+pointCircle.getR()/2);
+//        CirclePoint point5 = new CirclePoint(pointCircle.getX()-pointCircle.getR()/2, pointCircle.getY()+pointCircle.getR());
+//        CirclePoint point6= new CirclePoint(pointCircle.getX(), pointCircle.getY()+pointCircle.getR());
+//        CirclePoint point7 = new CirclePoint(pointCircle.getX()+pointCircle.getR()/2, pointCircle.getY()+pointCircle.getR());
+//        CirclePoint point8 = new CirclePoint(pointCircle.getX()+pointCircle.getR(), pointCircle.getY()+pointCircle.getR()/2);
+//        CirclePoint point9 = new CirclePoint(pointCircle.getX()+pointCircle.getR(), pointCircle.getY());
+//        CirclePoint point10 = new CirclePoint(pointCircle.getX()+pointCircle.getR(), pointCircle.getY()-pointCircle.getR()/2);
+//        CirclePoint point11 = new CirclePoint(pointCircle.getX()+pointCircle.getR()/2, pointCircle.getY()-pointCircle.getR());
+//        points.add(point0);
+//        points.add(point1);
+//        points.add(point2);
+//        points.add(point3);
+//        points.add(point4);
+//        points.add(point5);
+//        points.add(point6);
+//        points.add(point7);
+//        points.add(point8);
+//        points.add(point9);
+//        points.add(point10);
+//        points.add(point11);
 
 
 
@@ -149,8 +165,9 @@ public class DownView extends View {
         canvas.save();
 //        drawFlag(canvas);
 //        drawCircle(canvas);
-//        drawCircleLine(canvas);
-        drawCircleLine2(canvas);
+
+        drawCircleLine(canvas);
+//        drawCircleLine2(canvas);
     }
 
     private void drawCircleLine2(Canvas canvas) {
@@ -177,14 +194,14 @@ public class DownView extends View {
         canvas.drawPoint(points.get(11).getX(),points.get(11).getY(),circlePaint1);
 
     }
-
     private void drawCircleLine(Canvas canvas) {
-        circleLinePath.moveTo(points.get(0).getX(),points.get(0).getY());
-        circleLinePath.quadTo(points.get(1).getX(),points.get(1).getY(),points.get(2).getX(),points.get(2).getY());
-        circleLinePath.quadTo(points.get(3).getX(),points.get(3).getY(),points.get(4).getX(),points.get(4).getY());
-        circleLinePath.quadTo(points.get(5).getX(),points.get(5).getY(),points.get(6).getX(),points.get(6).getY());
-        circleLinePath.quadTo(points.get(7).getX(),points.get(7).getY(),points.get(0).getX(),points.get(0).getY());
+        circleLinePath.moveTo(points.get(0).getX()-controllerValue,points.get(0).getY());
+        circleLinePath.quadTo(points.get(1).getX(),points.get(1).getY(),points.get(2).getX(),points.get(2).getY()-controllerValue/2);
+        circleLinePath.quadTo(points.get(3).getX(),points.get(3).getY()-controllerValue,points.get(4).getX(),points.get(4).getY()-controllerValue);
+        circleLinePath.quadTo(points.get(5).getX(),points.get(5).getY()-controllerValue,points.get(6).getX(),points.get(6).getY()-controllerValue/2);
+        circleLinePath.quadTo(points.get(7).getX(),points.get(7).getY(),points.get(8).getX()+controllerValue,points.get(8).getY());
         canvas.drawPath(circleLinePath, circleLinePaint);
+        circleLinePath.reset();
     }
 
     private void drawFlag(Canvas canvas) {
@@ -209,13 +226,38 @@ public class DownView extends View {
         circlePaint1.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
         canvas.drawCircle(500, 500, radius, circlePaint1);
         circlePaint1.setXfermode(null);
-        Log.i("园", "" + radius);
         canvas.restoreToCount(layoutCont);
     }
+    //让圆形上部分展开
+    private void addCircleToLineAnimation_1() {
+        ValueAnimator controllerPointAnimation1=ValueAnimator.ofInt(0, (int) (pointCircle.getR()*2));
+        controllerPointAnimation1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                controllerValue= (int) animation.getAnimatedValue();
+                invalidate();
+            }
+        });
+        controllerPointAnimation1.setDuration(theAnimationExecuteTime);
+        controllerPointAnimation1.start();
+    }
+    //让圆形上部分展开后向上突起
+    private void addCircleToLineAnimation_2() {
+        ValueAnimator controllerPointAnimation1=ValueAnimator.ofInt(0, (int) (pointCircle.getR()*2));
+        controllerPointAnimation1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                controllerValue= (int) animation.getAnimatedValue();
+                invalidate();
+            }
+        });
+        controllerPointAnimation1.setDuration(theAnimationExecuteTime);
+        controllerPointAnimation1.start();
+    }
+
+
 
     private void addCircleAnimation() {
-
-
         AnimatorSet animatorSet = new AnimatorSet();
         ValueAnimator valueAnimator = ValueAnimator.ofInt(radius, 90);
         valueAnimator.setDuration(10000);
@@ -281,17 +323,17 @@ public class DownView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                addCircleAnimation();
-                Log.i("Down", "(" + event.getX() + "," + event.getY() + ")");
+//                addCircleAnimation();
+                addCircleToLineAnimation_1();
                 break;
             case MotionEvent.ACTION_MOVE:
-//                Log.i("Move","("+event.getX()+","+event.getY()+")");
                 break;
             case MotionEvent.ACTION_UP:
-//                Log.i("Up","("+event.getX()+","+event.getY()+")");
                 break;
         }
         return true;
     }
+
+
 
 }

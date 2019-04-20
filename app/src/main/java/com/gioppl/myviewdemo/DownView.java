@@ -33,10 +33,21 @@ public class DownView extends View {
     private Paint mTextPaint;
     private Paint circlePaint1, circleLinePaint;
     private static int circleAnimatorValue = 1;
+
     //动画的value
     private int radius = 0;
-    private int upValue=0;
-    private int upValue2=0;
+    private int upValue = 0;
+    private int upValue2 = 0;
+
+    //画箭头的点
+    private CirclePoint arrowPoint0;
+    private CirclePoint arrowPoint1;
+    private CirclePoint arrowPoint2;
+    private CirclePoint arrowPoint3;
+    private CirclePoint arrowPoint4;
+    private CirclePoint arrowPoint5;
+    private CirclePoint arrowPoint6;
+    private int arrowValue=0;
 
 
     private enum MoveStatus {
@@ -46,6 +57,7 @@ public class DownView extends View {
         STATUS3,
         STATUS4,
     }
+
     private AnimatorSet animatorSet;
     private MoveStatus moveStatus = MoveStatus.STATUS0;
 
@@ -155,21 +167,23 @@ public class DownView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.save();
-        switch (moveStatus) {
-            case STATUS0:
-                drawCircle(canvas);
-                break;
-            case STATUS1:
-                drawCircleLine(canvas);
-                break;
-            case STATUS2:
-                drawWave(canvas);
-                break;
-            case STATUS3:
-                break;
-            case STATUS4:
-                break;
-        }
+
+//        switch (moveStatus) {
+//            case STATUS0:
+//                drawCircle(canvas);
+//                break;
+//            case STATUS1:
+//                drawCircleLine(canvas);
+//                break;
+//            case STATUS2:
+//                drawWave(canvas);
+//                break;
+//            case STATUS3:
+//                break;
+//            case STATUS4:
+//                break;
+//        }
+        drawArrow(canvas);
     }
 
 
@@ -199,7 +213,7 @@ public class DownView extends View {
     }
 
     private void drawCircleLine(Canvas canvas) {
-        if ((controllerValue<pointCircle.getR()*2) && (moveStatus==MoveStatus.STATUS1)){
+        if ((controllerValue < pointCircle.getR() * 2) && (moveStatus == MoveStatus.STATUS1)) {
             circleLinePath.moveTo(points.get(0).getX() - controllerValue, points.get(0).getY());
             circleLinePath.quadTo(points.get(1).getX(), points.get(1).getY(), points.get(2).getX(), points.get(2).getY() - controllerValue / 2);
             circleLinePath.quadTo(points.get(3).getX(), points.get(3).getY() - controllerValue, points.get(4).getX(), points.get(4).getY() - controllerValue);
@@ -207,8 +221,8 @@ public class DownView extends View {
             circleLinePath.quadTo(points.get(7).getX(), points.get(7).getY(), points.get(8).getX() + controllerValue, points.get(8).getY());
             canvas.drawPath(circleLinePath, circleLinePaint);
             circleLinePath.reset();
-        }else {
-            moveStatus=MoveStatus.STATUS2;
+        } else {
+            moveStatus = MoveStatus.STATUS2;
             ValueAnimator valueAnimator1 = upArcAnimation();
             valueAnimator1.start();
             ValueAnimator valueAnimator2 = upArcAnimation2();
@@ -217,31 +231,31 @@ public class DownView extends View {
         }
     }
 
-    int offset=0;
+    int offset = 0;
+
     //直线振荡
     private void drawWave(Canvas canvas) {
         float r = pointCircle.getR();
         float x = pointCircle.getX();
-        float y = pointCircle.getY()-r;
+        float y = pointCircle.getY() - r;
         Path wavePath = new Path();
 
+        if (moveStatus == MoveStatus.STATUS2) {
+            CirclePoint point1 = new CirclePoint(x - 2 * r, y);
+            CirclePoint point2 = new CirclePoint(x, y - upValue);
+            CirclePoint point3 = new CirclePoint(x + 2 * r, y);
+            wavePath.moveTo(point1.getX(), point1.getY());
+            wavePath.quadTo(point2.getX(), point2.getY(), point3.getX(), point3.getY());
+            canvas.drawPath(wavePath, circleLinePaint);
+            invalidate();
 
-        if (moveStatus==MoveStatus.STATUS2) {
-
-                CirclePoint point1=new CirclePoint(x-2*r,y);
-                CirclePoint point2=new CirclePoint(x,y-upValue);
-                CirclePoint point3=new CirclePoint(x+2*r,y);
-                wavePath.moveTo(point1.getX(),point1.getY());
-                wavePath.quadTo(point2.getX(),point2.getY(),point3.getX(),point3.getY());
-                canvas.drawPath(wavePath,circleLinePaint);
-                invalidate();
-
-        }else {
+        } else {
 
         }
         offset++;
     }
-    //画一个箭头
+
+    //画一个标牌
     private void drawFlag(Canvas canvas) {
         int width = getWidth() - 200;
         int height = getHeight() - 200;
@@ -257,9 +271,10 @@ public class DownView extends View {
         canvas.drawText("100%", width / 2 + 35, height / 2 + 70, mTextPaint);
         canvas.drawPath(mArrowPath, mArrowPaint);
     }
+
     //画圆
     private void drawCircle(Canvas canvas) {
-        if (radius<pointCircle.getR()&& moveStatus==MoveStatus.STATUS0){
+        if (radius < pointCircle.getR() && moveStatus == MoveStatus.STATUS0) {
             float x = pointCircle.getX();
             float y = pointCircle.getY();
             float r = pointCircle.getR();
@@ -268,16 +283,58 @@ public class DownView extends View {
             canvas.drawCircle(x, y, radius, circlePaint1);
             circlePaint1.setXfermode(null);
             invalidate();
-        }else {
-            moveStatus=MoveStatus.STATUS1;
+        } else {
+            moveStatus = MoveStatus.STATUS1;
             invalidate();
         }
 
     }
+    //画箭头
+    private void drawArrow(Canvas canvas) {
+        int arrow_three_fourth=arrowValue/4*3;
+        int arrow_half=arrowValue/2;
+        int arrow_one_fourth=arrowValue/4;
+        float x = pointCircle.getX();
+        float y = pointCircle.getY();
+        float r = pointCircle.getR();
+        arrowPoint0 = new CirclePoint(x - r / 4, y - r / 2);
+        arrowPoint1 = new CirclePoint(x - r / 4, y);
+        arrowPoint2 = new CirclePoint(x - r / 2, y);
+        arrowPoint3 = new CirclePoint(x, y + r / 2);
+        arrowPoint4 = new CirclePoint(x + r/2 , y );
+        arrowPoint5 = new CirclePoint(x + r / 4, y );
+        arrowPoint6 = new CirclePoint(x + r / 4, y - r / 2);
+        Path arrowPath = new Path();
+        arrowPath.moveTo(arrowPoint0.getX()-arrow_three_fourth, arrowPoint0.getY()-arrow_half);
+        arrowPath.lineTo(arrowPoint1.getX()-arrow_three_fourth, arrowPoint1.getY());
+        arrowPath.lineTo(arrowPoint2.getX()+arrow_one_fourth, arrowPoint2.getY());
+        arrowPath.lineTo(arrowPoint3.getX(), arrowPoint3.getY()-arrow_one_fourth);
+        arrowPath.lineTo(arrowPoint4.getX()-arrow_one_fourth, arrowPoint4.getY());
+        arrowPath.lineTo(arrowPoint5.getX()+arrow_three_fourth, arrowPoint5.getY());
+        arrowPath.lineTo(arrowPoint6.getX()+arrow_three_fourth, arrowPoint6.getY()-arrow_half);
+        arrowPath.lineTo(arrowPoint0.getX()-arrow_three_fourth, arrowPoint0.getY()-arrow_half);
+        canvas.drawPath(arrowPath,circlePaint1);
+    }
+
+    private ValueAnimator translationAnimation(){
+        ValueAnimator valueAnimator=ValueAnimator.ofInt(0, (int) pointCircle.getR());
+        valueAnimator.setDuration(theAnimationExecuteTime);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                arrowValue = (int) animation.getAnimatedValue();
+                invalidate();
+            }
+        });
+        return valueAnimator;
+    }
+
+
+
     //弧线向上的动画
     private ValueAnimator upArcAnimation() {
 
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(120, upValue-120);
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(120, upValue - 120);
         valueAnimator.setDuration(theAnimationExecuteTime);
         valueAnimator.setRepeatMode(ValueAnimator.REVERSE);
         valueAnimator.setRepeatCount(20);//设置重复次数。
@@ -285,12 +342,13 @@ public class DownView extends View {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 upValue = (int) animation.getAnimatedValue();
-                Log.i("1111111",upValue+"");
+                Log.i("1111111", upValue + "");
                 invalidate();
             }
         });
         return valueAnimator;
     }
+
     //弧线向上的动画
     private ValueAnimator upArcAnimation2() {
 
@@ -302,12 +360,13 @@ public class DownView extends View {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 upValue2 = (int) animation.getAnimatedValue();
-                Log.i("2222222",upValue2+"");
+                Log.i("2222222", upValue2 + "");
                 invalidate();
             }
         });
         return valueAnimator;
     }
+
     //圆渐变的动画
     private ValueAnimator addCircleAnimation() {
 
@@ -337,7 +396,7 @@ public class DownView extends View {
                 invalidate();
             }
         });
-        controllerPointAnimation1.setDuration(theAnimationExecuteTime/2);
+        controllerPointAnimation1.setDuration(theAnimationExecuteTime / 2);
         return controllerPointAnimation1;
 //        controllerPointAnimation1.start();
     }
@@ -355,14 +414,17 @@ public class DownView extends View {
         controllerPointAnimation1.setDuration(theAnimationExecuteTime);
         controllerPointAnimation1.start();
     }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                ValueAnimator valueAnimator = addCircleAnimation();
-                ValueAnimator valueAnimator1 = addCircleToLineAnimation_1();
-                animatorSet.play(valueAnimator).before(valueAnimator1);
-                animatorSet.start();
+//                ValueAnimator valueAnimator = addCircleAnimation();
+//                ValueAnimator valueAnimator1 = addCircleToLineAnimation_1();
+//                animatorSet.play(valueAnimator).before(valueAnimator1);
+//                animatorSet.start();
+                ValueAnimator valueAnimator = translationAnimation();
+                valueAnimator.start();
                 break;
             case MotionEvent.ACTION_MOVE:
                 break;

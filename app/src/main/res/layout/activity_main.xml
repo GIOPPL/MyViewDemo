@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="#038EFC"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -30,6 +30,6 @@
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@android:color/black"
+        android:background="#038EFC"
         />
 </LinearLayout>

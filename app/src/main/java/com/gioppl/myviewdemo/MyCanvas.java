@@ -39,7 +39,6 @@ public class MyCanvas {
             circleLinePath.reset();
         } else {
             view.invalidate();
-            DownView.moveStatus= DownView.MoveStatus.STATUS1;
         }
 
     }
@@ -86,7 +85,7 @@ public class MyCanvas {
             view.invalidate();
     }
 
-    //画圆
+    //画圆，渐变圆
     public static void drawCircle(Canvas canvas, int value, Paint paint, View view,PointBean pointCircle,ArrayList<PointBean> points) {
         if (value < pointCircle.getR()) {
             float x = pointCircle.getX();

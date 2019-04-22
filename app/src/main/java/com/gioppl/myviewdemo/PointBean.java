@@ -5,12 +5,12 @@ package com.gioppl.myviewdemo;
  * creater：17664
  * desc:
  */
-public class CirclePoint {
+public class PointBean {
     private float x;
     private float y;
     private float r;
 
-    public CirclePoint(float x, float y) {
+    public PointBean(float x, float y) {
         this.x = x;
         this.y = y;
     }
@@ -43,7 +43,7 @@ public class CirclePoint {
         this.r = r;
     }
 
-    public CirclePoint(float x, float y, float r) {
+    public PointBean(float x, float y, float r) {
         this.x = x;
         this.y = y;
         this.r = r;

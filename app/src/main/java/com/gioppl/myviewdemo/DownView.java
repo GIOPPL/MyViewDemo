@@ -63,8 +63,9 @@ public class DownView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.save();
-        MyCanvas.drawCircle(canvas, value_disk_to_circle, paint_white_fill_5, this, pointCircle, MyPath.BezierCircle(pointCircle));//饼渐变圆
-        MyCanvas.drawCircleLine(canvas, value_circle_to_line, paint_white_stroke_15, this, pointCircle, MyPath.BezierCircle(pointCircle));//四个点的贝塞尔圆
+//        MyCanvas.drawCircle(canvas, value_disk_to_circle, paint_white_fill_5, this, pointCircle, MyPath.BezierCircle(pointCircle));//饼渐变圆
+        MyCanvas.drawCircleLine4_2(canvas, value_circle_to_line, paint_white_stroke_15, this, pointCircle, MyPath.BezierCircle(pointCircle));//四个点的贝塞尔圆
+
 //        MyCanvas.drawArrow(canvas,value_circle_to_line,paint_white_stroke_5,this,pointCircle,MyPath.arrowPath(pointCircle));//箭头
     }
 
@@ -73,7 +74,7 @@ public class DownView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                ValueAnimator valueAnimator = animationDiskToCircle();
+                ValueAnimator valueAnimator = animationCircleToLine2();
                 valueAnimator.start();
                 break;
         }
@@ -96,6 +97,20 @@ public class DownView extends View {
     }
 
 
+    //让圆形上部分展开动画2
+    private ValueAnimator animationCircleToLine2() {
+        ValueAnimator controllerPointAnimation1 = ValueAnimator.ofInt(0, (int) (pointCircle.getR() /4));
+        controllerPointAnimation1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                value_circle_to_line = (int) animation.getAnimatedValue();
+                invalidate();
+            }
+        });
+        controllerPointAnimation1.setDuration(theAnimationExecuteTime *3);
+        return controllerPointAnimation1;
+    }
+
     //让圆形上部分展开动画
     private ValueAnimator animationCircleToLine() {
         ValueAnimator controllerPointAnimation1 = ValueAnimator.ofInt(0, (int) (pointCircle.getR() * 2));
@@ -106,7 +121,7 @@ public class DownView extends View {
                 invalidate();
             }
         });
-        controllerPointAnimation1.setDuration(theAnimationExecuteTime / 2);
+        controllerPointAnimation1.setDuration(theAnimationExecuteTime *10);
         return controllerPointAnimation1;
     }
 

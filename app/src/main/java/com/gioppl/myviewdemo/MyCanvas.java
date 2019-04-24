@@ -118,17 +118,16 @@ public class MyCanvas {
 
         canvas.drawPath(circleLinePath, paint);
 
-        paint.setColor(Color.BLACK);
-        for (int i=0;i<points.size();i++){
-            canvas.drawPoint(points.get(i).getX(), points.get(i).getY(),paint);
-        }
-        paint.setColor(Color.WHITE);
+        //画点
+//        paint.setColor(Color.BLACK);
+//        for (int i=0;i<points.size();i++){
+//            canvas.drawPoint(points.get(i).getX(), points.get(i).getY(),paint);
+//        }
+//        paint.setColor(Color.WHITE);
 
 
 
     }
-
-
 
     //贝塞尔画圆8个锚点
     public static void drawCircleLine8(Canvas canvas, int controllerValue, Paint paint, View view,PointBean pointCircle,ArrayList<PointBean> points) {
@@ -189,7 +188,7 @@ public class MyCanvas {
         }
     }
     //画箭头
-    public static void drawArrow(Canvas canvas, int value, Paint paint, View view,PointBean pointCircle,ArrayList<PointBean> points) {
+    public static void drawArrow(Canvas canvas, int value, Paint paint,ArrayList<PointBean> points) {
         int arrow_three_fourth=value/4*3;
         int arrow_half=value/2;
         int arrow_one_fourth=value/4;
@@ -205,39 +204,47 @@ public class MyCanvas {
         canvas.drawPath(arrowPath,paint);
     }
     //箭头往上到基准线
-    public static void arrowUpToZeroLine(Canvas canvas, int value, Paint paint, View view,PointBean pointCircle,ArrayList<PointBean> points) {
+    public static void arrowUpToZeroLine(Canvas canvas, int value, Paint paint,ArrayList<PointBean> points) {
+        Path arrowPath = new Path();
+        arrowPath.moveTo(points.get(0).getX(), points.get(0).getY()-value);
+        arrowPath.lineTo(points.get(1).getX(), points.get(1).getY()-value);
+        arrowPath.lineTo(points.get(2).getX(), points.get(2).getY()-value);
+        arrowPath.lineTo(points.get(3).getX(), points.get(3).getY()-value);
+        arrowPath.lineTo(points.get(4).getX(), points.get(4).getY()-value);
+        arrowPath.lineTo(points.get(5).getX(), points.get(5).getY()-value);
+        arrowPath.lineTo(points.get(6).getX(), points.get(6).getY()-value);
+        arrowPath.lineTo(points.get(0).getX(), points.get(0).getY()-value);
+        canvas.drawPath(arrowPath,paint);
+    }
+    //画一条直线,直线震荡
+    public static void drawStraightenLine(Canvas canvas, int value, Paint paint,ArrayList<PointBean> points){
+        Path linePath=new Path();
+        linePath.moveTo(points.get(0).getX(),points.get(0).getY());
+        linePath.cubicTo(points.get(1).getX(),points.get(1).getY()-value,points.get(2).getX(),points.get(2).getY()-value,points.get(3).getX(),points.get(3).getY());
+        canvas.drawPath(linePath,paint);
+        //画点
+//        paint.setColor(Color.BLACK);
+//        for (int i=0;i<points.size();i++){
+//            canvas.drawPoint(points.get(i).getX(), points.get(i).getY()-r*2,paint);
+//        }
+//        paint.setColor(Color.WHITE);
+    }
 
+    //画标牌
+    public static void drawScutcheon(Canvas canvas, int value, Paint paint,ArrayList<PointBean> points) {
+        int arrowOffset=100;
         int arrow_three_fourth=value/4*3;
         int arrow_half=value/2;
         int arrow_one_fourth=value/4;
         Path arrowPath = new Path();
-        arrowPath.moveTo(points.get(0).getX()-arrow_three_fourth, points.get(0).getY()-arrow_half);
-        arrowPath.lineTo(points.get(1).getX()-arrow_three_fourth, points.get(1).getY());
-        arrowPath.lineTo(points.get(2).getX()+arrow_one_fourth, points.get(2).getY());
-        arrowPath.lineTo(points.get(3).getX(), points.get(3).getY()-arrow_one_fourth);
-        arrowPath.lineTo(points.get(4).getX()-arrow_one_fourth, points.get(4).getY());
-        arrowPath.lineTo(points.get(5).getX()+arrow_three_fourth, points.get(5).getY());
-        arrowPath.lineTo(points.get(6).getX()+arrow_three_fourth, points.get(6).getY()-arrow_half);
-        arrowPath.lineTo(points.get(0).getX()-arrow_three_fourth, points.get(0).getY()-arrow_half);
+        arrowPath.moveTo(points.get(0).getX()-arrow_three_fourth, points.get(0).getY()-arrow_half-arrowOffset);
+        arrowPath.lineTo(points.get(1).getX()-arrow_three_fourth, points.get(1).getY()-arrowOffset);
+        arrowPath.lineTo(points.get(2).getX()+arrow_one_fourth, points.get(2).getY()-arrowOffset);
+        arrowPath.lineTo(points.get(3).getX(), points.get(3).getY()-arrow_one_fourth-arrowOffset);
+        arrowPath.lineTo(points.get(4).getX()-arrow_one_fourth, points.get(4).getY()-arrowOffset);
+        arrowPath.lineTo(points.get(5).getX()+arrow_three_fourth, points.get(5).getY()-arrowOffset);
+        arrowPath.lineTo(points.get(6).getX()+arrow_three_fourth, points.get(6).getY()-arrow_half-arrowOffset);
+        arrowPath.lineTo(points.get(0).getX()-arrow_three_fourth, points.get(0).getY()-arrow_half-arrowOffset);
         canvas.drawPath(arrowPath,paint);
     }
-
-
-
-//    //画一个标牌
-//    private void drawFlag(Canvas canvas) {
-//        int width = getWidth() - 200;
-//        int height = getHeight() - 200;
-//        mArrowPath.moveTo(width / 2, height / 2);
-//        mArrowPath.lineTo(width / 2 + 200, height / 2);
-//        mArrowPath.lineTo(width / 2 + 200, height / 2 + 100);
-//        mArrowPath.lineTo(width / 2 + 130, height / 2 + 100);
-//        mArrowPath.lineTo(width / 2 + 100, height / 2 + 150);
-//        mArrowPath.lineTo(width / 2 + 70, height / 2 + 100);
-//        mArrowPath.lineTo(width / 2, height / 2 + 100);
-//        mArrowPath.lineTo(width / 2, height / 2 + 100);
-//        mArrowPath.lineTo(width / 2, height / 2);
-//        canvas.drawText("100%", width / 2 + 35, height / 2 + 70, mTextPaint);
-//        canvas.drawPath(mArrowPath, mArrowPaint);
-//    }
 }

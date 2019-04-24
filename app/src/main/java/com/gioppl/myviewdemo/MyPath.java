@@ -1,5 +1,4 @@
 package com.gioppl.myviewdemo;
-
 import java.util.ArrayList;
 
 /**
@@ -38,31 +37,6 @@ public class MyPath {
         return circlePoints;
     }
 
-    public static ArrayList<PointBean> BezierCircleToLine(PointBean pointCircle) {
-        float offset=pointCircle.getR()*0.1f;
-        float offsetB=pointCircle.getR()*0.05f;
-
-/*        circlePoints = new ArrayList<>();
-        PointBean point0 = new PointBean(pointCircle.getX(), pointCircle.getY() - pointCircle.getR()+offsetB);
-        PointBean point1 = new PointBean(pointCircle.getX() - pointCircle.getR()+offset, pointCircle.getY() - pointCircle.getR()+offset);
-        PointBean point2 = new PointBean(pointCircle.getX() - pointCircle.getR()+offsetB, pointCircle.getY());
-        PointBean point3 = new PointBean(pointCircle.getX() - pointCircle.getR()+offset, pointCircle.getY() + pointCircle.getR()-offset);
-        PointBean point4 = new PointBean(pointCircle.getX(), pointCircle.getY() + pointCircle.getR()-offsetB);
-        PointBean point5 = new PointBean(pointCircle.getX() + pointCircle.getR()-offset, pointCircle.getY() + pointCircle.getR()-offset);
-        PointBean point6 = new PointBean(pointCircle.getX() + pointCircle.getR()-offsetB, pointCircle.getY());
-        PointBean point7 = new PointBean(pointCircle.getX() + pointCircle.getR()-offset, pointCircle.getY() - pointCircle.getR()+offset);
-        PointBean point8 = new PointBean(pointCircle.getX(), pointCircle.getY() - pointCircle.getR()+offsetB);
-        circlePoints.add(point0);
-        circlePoints.add(point1);
-        circlePoints.add(point2);
-        circlePoints.add(point3);
-        circlePoints.add(point4);
-        circlePoints.add(point5);
-        circlePoints.add(point6);
-        circlePoints.add(point7);
-        circlePoints.add(point8);*/
-        return circlePoints;
-    }
 
 
 
@@ -71,9 +45,10 @@ public class MyPath {
      * @param pointCircle
      * @return
      */
+    public static ArrayList<PointBean> arrowPoints;
     public static ArrayList<PointBean> arrowPath(PointBean pointCircle) {
-        ArrayList<PointBean> points;
-        points = new ArrayList<>();
+
+        arrowPoints = new ArrayList<>();
         float x = pointCircle.getX();
         float y = pointCircle.getY();
         float r = pointCircle.getR();
@@ -84,13 +59,36 @@ public class MyPath {
         PointBean arrowPoint4 = new PointBean(x + r / 2, y);
         PointBean arrowPoint5 = new PointBean(x + r / 4, y);
         PointBean arrowPoint6 = new PointBean(x + r / 4, y - r / 2);
-        points.add(arrowPoint0);
-        points.add(arrowPoint1);
-        points.add(arrowPoint2);
-        points.add(arrowPoint3);
-        points.add(arrowPoint4);
-        points.add(arrowPoint5);
-        points.add(arrowPoint6);
-        return points;
+        arrowPoints.add(arrowPoint0);
+        arrowPoints.add(arrowPoint1);
+        arrowPoints.add(arrowPoint2);
+        arrowPoints.add(arrowPoint3);
+        arrowPoints.add(arrowPoint4);
+        arrowPoints.add(arrowPoint5);
+        arrowPoints.add(arrowPoint6);
+        return arrowPoints;
+    }
+
+    /**
+     * 画一条直线
+     * @param pointCircle
+     * @return
+     */
+    public static ArrayList<PointBean> linePoints;
+    public static ArrayList<PointBean> straightLinePath() {
+        linePoints = new ArrayList<>();
+        float startX = circlePoints.get(0).getX();
+        float startY = circlePoints.get(0).getY();
+        float endX=circlePoints.get(8).getX();
+        float endY = circlePoints.get(8).getY();
+        PointBean point1=new PointBean(startX,startY);
+        PointBean point2=new PointBean(startX+(endX-startX)/3,startY);
+        PointBean point3=new PointBean(startX+(endX-startX)/3*2,startY);
+        PointBean point4=new PointBean(endX,endY);
+        linePoints.add(point1);
+        linePoints.add(point2);
+        linePoints.add(point3);
+        linePoints.add(point4);
+        return linePoints;
     }
 }

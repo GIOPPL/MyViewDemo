@@ -46,6 +46,7 @@ public class MyPath {
      * @return
      */
     public static ArrayList<PointBean> arrowPoints;
+    public static ArrayList<PointBean> arrowPointsDown;
     public static ArrayList<PointBean> arrowPath(PointBean pointCircle) {
 
         arrowPoints = new ArrayList<>();
@@ -122,5 +123,25 @@ public class MyPath {
         skipPoints.add(point3);
         skipPoints.add(point4);
         return skipPoints;
+    }
+
+    /**
+     * 下载的直线，有两段普通直线
+     * @return
+     */
+    public static ArrayList<PointBean> normalPoints;
+    public static ArrayList<PointBean> normalPath(){
+        normalPoints = new ArrayList<>();
+        float startX = circlePoints.get(0).getX();
+        float startY = circlePoints.get(0).getY();
+        float endX=circlePoints.get(8).getX();
+        float endY = circlePoints.get(8).getY();
+        PointBean point0=new PointBean(startX,startY);
+        PointBean point1=new PointBean(startX,startY);
+        PointBean point2=new PointBean(endX,endY);
+        normalPoints.add(point0);
+        normalPoints.add(point1);
+        normalPoints.add(point2);
+        return normalPoints;
     }
 }

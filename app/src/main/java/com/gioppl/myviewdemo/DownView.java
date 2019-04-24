@@ -23,17 +23,18 @@ public class DownView extends View {
     //几种状态
     public static MoveStatus moveStatus = MoveStatus.STATUS0;//初始化最开始的状态为0
 
-
     public enum MoveStatus {
         STATUS0,
         STATUS1,
         STATUS2,
-        STATUS3, ERROR_STATUS
+        STATUS3,
+        STATUS4,
+        ERROR_STATUS
     }
 
 
     //画笔
-    public Paint paint_black_fill_5, paint_white_stroke_15, paint_black_stroke_5, paint_white_fill_5;
+    public Paint paint_black_fill_5, paint_white_stroke_15, paint_black_stroke_5, paint_white_fill_5,paint_white_stroke_35;
 
 
     //动画的value
@@ -41,6 +42,8 @@ public class DownView extends View {
     private int value_circle_to_line = 0;//贝塞尔画的圆变成线
     private int value_line_up_and_down = 0;//线条上下震动
     private int value_arrow_to_scutcheon;//箭头变成标牌
+    private float value_simulate_x=0;//模拟下载0-100
+    private float value_simulate_y=0;//模拟下载0-r/4
 
 
     private long theAnimationExecuteTime = 500;//动画时间
@@ -55,9 +58,11 @@ public class DownView extends View {
         pointCircle = new PointBean(500, 500, 100);
         pointCircle2 = new PointBean(700, 500, 100);
         paint_black_fill_5 = MyPaint.getPaintByAntiAliasAndDither(Color.BLACK, Paint.Style.FILL, 5);
-        paint_white_stroke_15 = MyPaint.getPaintByAntiAliasAndDither(Color.WHITE, Paint.Style.STROKE, 15);
+        paint_white_stroke_15 = MyPaint.getPaintByAntiAliasAndDither(Color.WHITE, Paint.Style.STROKE, 10);
         paint_black_stroke_5 = MyPaint.getPaintByAntiAliasAndDither(Color.BLACK, Paint.Style.STROKE, 5);
         paint_white_fill_5 = MyPaint.getPaintByAntiAliasAndDither(Color.WHITE, Paint.Style.FILL, 5);
+        paint_white_stroke_35 = MyPaint.getPaintByAntiAliasAndDither(Color.WHITE, Paint.Style.FILL, 5);
+        paint_white_stroke_35.setTextSize(30);
     }
 
     @Override
@@ -78,12 +83,15 @@ public class DownView extends View {
             case STATUS2://弧线变直伴随着箭头往上移动
                 MyCanvas.arrowUpToZeroLine(canvas, value_circle_to_line, paint_black_fill_5, MyPath.arrowPoints);//上升箭头
                 MyCanvas.drawLineToStraighten(canvas, value_circle_to_line, paint_white_stroke_15, this, pointCircle, MyPath.circlePoints);//贝塞尔线
-                MyCanvas.drawSkipLine(canvas,paint_white_stroke_15,MyPath.skipWayPath(pointCircle));//画一条运动轨迹
+                MyCanvas.drawSkipLine(MyPath.skipWayPath(pointCircle));//画一条运动轨迹
                 break;
             case STATUS3://箭头跳起来伴随着箭头变成标牌和直线震动
-
                 MyCanvas.drawStraightenLine(canvas, value_line_up_and_down, paint_white_stroke_15, MyPath.straightLinePath());//画一条直线
-                MyCanvas.drawScutcheon(canvas, value_arrow_to_scutcheon,skipPosition, paint_black_fill_5, MyPath.arrowPoints);//跳跃箭头
+                MyCanvas.drawScutcheon(canvas, value_arrow_to_scutcheon,skipPosition, paint_black_fill_5, MyPath.arrowPoints,pointCircle.getR());//跳跃箭头
+                break;
+            case STATUS4://画一条普通直线，两段
+                MyCanvas.drawNormalLine(canvas, value_simulate_x,value_simulate_y, paint_white_stroke_15, MyPath.normalPath());//画一条普通直线
+                MyCanvas.drawScutcheonDown(canvas, value_simulate_x,value_simulate_y, paint_black_fill_5,paint_white_stroke_35, MyPath.arrowPointsDown);//标牌下载的动画
                 break;
         }
     }
@@ -169,9 +177,6 @@ public class DownView extends View {
             public void onAnimationUpdate(ValueAnimator animation) {
                 value_line_up_and_down = (int) animation.getAnimatedValue();
                 invalidate();
-//                if (value_circle_to_line>=(pointCircle.getR() )){
-//                    moveStatus=MoveStatus.STATUS3;
-//                }
             }
         });
         controllerPointAnimation1.setDuration(theAnimationExecuteTime);
@@ -188,6 +193,11 @@ public class DownView extends View {
             public void onAnimationUpdate(ValueAnimator animation) {
                 value_arrow_to_scutcheon = (int) animation.getAnimatedValue();
                 invalidate();
+                if (value_arrow_to_scutcheon>=(int) pointCircle.getR()/4){
+                    moveStatus=MoveStatus.STATUS4;
+                    animationSimulate_X().start();
+                    animationSimulate_Y().start();
+                }
             }
         });
         return valueAnimator;
@@ -212,7 +222,33 @@ public class DownView extends View {
         return valueAnimator;
     }
 
+    //下载的时候模拟下载,X轴方向的变化
+    private ValueAnimator animationSimulate_X() {
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0,30,50,85, 100);
+        valueAnimator.setDuration(theAnimationExecuteTime*15);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                value_simulate_x = (float) animation.getAnimatedValue();
+                invalidate();
+            }
+        });
+        return valueAnimator;
+    }
+    //下载的时候模拟下载,Y轴方向的变化
+    private ValueAnimator animationSimulate_Y() {
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, pointCircle.getR()*4/5,0);
+        valueAnimator.setDuration(theAnimationExecuteTime*15);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                value_simulate_y = (float) animation.getAnimatedValue();
+                invalidate();
+            }
+        });
+        return valueAnimator;
+    }
 
 
 

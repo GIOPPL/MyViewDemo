@@ -27,7 +27,8 @@ public class DownView extends View {
     public enum MoveStatus {
         STATUS0,
         STATUS1,
-        ERROR_STATUS
+        STATUS2,
+        STATUS3, ERROR_STATUS
     }
 
 
@@ -63,10 +64,22 @@ public class DownView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.save();
-//        MyCanvas.drawCircle(canvas, value_disk_to_circle, paint_white_fill_5, this, pointCircle, MyPath.BezierCircle(pointCircle));//饼渐变圆
-        MyCanvas.drawCircleLine4_2(canvas, value_circle_to_line, paint_white_stroke_15, this, pointCircle, MyPath.BezierCircle(pointCircle));//四个点的贝塞尔圆
+        switch (moveStatus){
+            case STATUS0://由饼变成圆
+                MyCanvas.drawCircle(canvas, value_disk_to_circle, paint_white_fill_5, this, pointCircle, MyPath.BezierCircle(pointCircle));//饼渐变圆
+                MyCanvas.drawArrow(canvas, value_arrow_to_scutcheon, paint_black_fill_5, this, pointCircle, MyPath.arrowPath(pointCircle));//箭头
+                break;
+            case STATUS1://由圆变成弧线
+                MyCanvas.drawArrow(canvas, value_arrow_to_scutcheon, paint_black_fill_5, this, pointCircle, MyPath.arrowPath(pointCircle));//箭头
+                MyCanvas.drawCircleLine4_2(canvas, value_circle_to_line, paint_white_stroke_15, this, pointCircle, MyPath.BezierCircle(pointCircle));//四个点的贝塞尔圆
+                break;
+            case STATUS2://弧线变直
+                MyCanvas.arrowUpToZeroLine(canvas, value_arrow_to_scutcheon, paint_black_fill_5, this, pointCircle, MyPath.arrowPath(pointCircle));//箭头
+                MyCanvas.drawLineToStraighten(canvas, value_circle_to_line, paint_white_stroke_15, this, pointCircle, MyPath.circlePoints);//贝塞尔线
+                break;
 
-//        MyCanvas.drawArrow(canvas,value_circle_to_line,paint_white_stroke_5,this,pointCircle,MyPath.arrowPath(pointCircle));//箭头
+
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -74,7 +87,7 @@ public class DownView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                ValueAnimator valueAnimator = animationCircleToLine2();
+                ValueAnimator valueAnimator = animationDiskToCircle();
                 valueAnimator.start();
                 break;
         }
@@ -84,20 +97,24 @@ public class DownView extends View {
     //圆渐变成同心圆的动画
     private ValueAnimator animationDiskToCircle() {
         this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);//关闭硬件加速
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, (int) (pointCircle.getR()-15));
+        final ValueAnimator valueAnimator = ValueAnimator.ofInt(0, (int) (pointCircle.getR()-15));
         valueAnimator.setDuration(theAnimationExecuteTime);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 value_disk_to_circle = (int) animation.getAnimatedValue();
                 invalidate();
+                if (value_disk_to_circle>=(pointCircle.getR()-15)){
+                    moveStatus=MoveStatus.STATUS1;
+                    animationCircleToLine2().start();
+                }
             }
         });
         return valueAnimator;
     }
 
 
-    //让圆形上部分展开动画2
+    //让圆形上部分展开变成一条向下的曲线，这是曲线运行的第一个状态
     private ValueAnimator animationCircleToLine2() {
         ValueAnimator controllerPointAnimation1 = ValueAnimator.ofInt(0, (int) (pointCircle.getR() /4));
         controllerPointAnimation1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -105,23 +122,32 @@ public class DownView extends View {
             public void onAnimationUpdate(ValueAnimator animation) {
                 value_circle_to_line = (int) animation.getAnimatedValue();
                 invalidate();
+                if (value_circle_to_line>=(pointCircle.getR() /4)){
+                    moveStatus=MoveStatus.STATUS2;
+                    animationLineToStraighten().start();
+                    value_circle_to_line=0;
+                }
             }
         });
-        controllerPointAnimation1.setDuration(theAnimationExecuteTime *3);
+        controllerPointAnimation1.setDuration(theAnimationExecuteTime);
         return controllerPointAnimation1;
     }
 
-    //让圆形上部分展开动画
-    private ValueAnimator animationCircleToLine() {
-        ValueAnimator controllerPointAnimation1 = ValueAnimator.ofInt(0, (int) (pointCircle.getR() * 2));
+    //让曲线变直，这是曲线运行的第二个状态
+    private ValueAnimator animationLineToStraighten() {
+        ValueAnimator controllerPointAnimation1 = ValueAnimator.ofInt(0, (int) pointCircle.getR());
         controllerPointAnimation1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 value_circle_to_line = (int) animation.getAnimatedValue();
                 invalidate();
+                if (value_circle_to_line>=(pointCircle.getR() /4)){
+//                    moveStatus=MoveStatus.STATUS3;
+//                    value_circle_to_line=0;
+                }
             }
         });
-        controllerPointAnimation1.setDuration(theAnimationExecuteTime *10);
+        controllerPointAnimation1.setDuration(theAnimationExecuteTime );
         return controllerPointAnimation1;
     }
 

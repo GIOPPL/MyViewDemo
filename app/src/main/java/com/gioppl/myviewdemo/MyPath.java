@@ -9,14 +9,14 @@ import java.util.ArrayList;
  */
 public class MyPath {
     private static final float BIZER_CONSTANT = 0.5522f;
-
+    public static ArrayList<PointBean> circlePoints;
 
     //用贝塞尔画圆
     public static ArrayList<PointBean> BezierCircle(PointBean pointCircle) {
         float offset=pointCircle.getR()*0.1f;
         float offsetB=pointCircle.getR()*0.05f;
-        ArrayList<PointBean> points;
-        points = new ArrayList<>();
+
+        circlePoints = new ArrayList<>();
         PointBean point0 = new PointBean(pointCircle.getX(), pointCircle.getY() - pointCircle.getR()+offsetB);
         PointBean point1 = new PointBean(pointCircle.getX() - pointCircle.getR()+offset, pointCircle.getY() - pointCircle.getR()+offset);
         PointBean point2 = new PointBean(pointCircle.getX() - pointCircle.getR()+offsetB, pointCircle.getY());
@@ -26,18 +26,51 @@ public class MyPath {
         PointBean point6 = new PointBean(pointCircle.getX() + pointCircle.getR()-offsetB, pointCircle.getY());
         PointBean point7 = new PointBean(pointCircle.getX() + pointCircle.getR()-offset, pointCircle.getY() - pointCircle.getR()+offset);
         PointBean point8 = new PointBean(pointCircle.getX(), pointCircle.getY() - pointCircle.getR()+offsetB);
-        points.add(point0);
-        points.add(point1);
-        points.add(point2);
-        points.add(point3);
-        points.add(point4);
-        points.add(point5);
-        points.add(point6);
-        points.add(point7);
-        points.add(point8);
-        return points;
+        circlePoints.add(point0);
+        circlePoints.add(point1);
+        circlePoints.add(point2);
+        circlePoints.add(point3);
+        circlePoints.add(point4);
+        circlePoints.add(point5);
+        circlePoints.add(point6);
+        circlePoints.add(point7);
+        circlePoints.add(point8);
+        return circlePoints;
     }
 
+    public static ArrayList<PointBean> BezierCircleToLine(PointBean pointCircle) {
+        float offset=pointCircle.getR()*0.1f;
+        float offsetB=pointCircle.getR()*0.05f;
+
+/*        circlePoints = new ArrayList<>();
+        PointBean point0 = new PointBean(pointCircle.getX(), pointCircle.getY() - pointCircle.getR()+offsetB);
+        PointBean point1 = new PointBean(pointCircle.getX() - pointCircle.getR()+offset, pointCircle.getY() - pointCircle.getR()+offset);
+        PointBean point2 = new PointBean(pointCircle.getX() - pointCircle.getR()+offsetB, pointCircle.getY());
+        PointBean point3 = new PointBean(pointCircle.getX() - pointCircle.getR()+offset, pointCircle.getY() + pointCircle.getR()-offset);
+        PointBean point4 = new PointBean(pointCircle.getX(), pointCircle.getY() + pointCircle.getR()-offsetB);
+        PointBean point5 = new PointBean(pointCircle.getX() + pointCircle.getR()-offset, pointCircle.getY() + pointCircle.getR()-offset);
+        PointBean point6 = new PointBean(pointCircle.getX() + pointCircle.getR()-offsetB, pointCircle.getY());
+        PointBean point7 = new PointBean(pointCircle.getX() + pointCircle.getR()-offset, pointCircle.getY() - pointCircle.getR()+offset);
+        PointBean point8 = new PointBean(pointCircle.getX(), pointCircle.getY() - pointCircle.getR()+offsetB);
+        circlePoints.add(point0);
+        circlePoints.add(point1);
+        circlePoints.add(point2);
+        circlePoints.add(point3);
+        circlePoints.add(point4);
+        circlePoints.add(point5);
+        circlePoints.add(point6);
+        circlePoints.add(point7);
+        circlePoints.add(point8);*/
+        return circlePoints;
+    }
+
+
+
+    /**
+     * 画箭头的
+     * @param pointCircle
+     * @return
+     */
     public static ArrayList<PointBean> arrowPath(PointBean pointCircle) {
         ArrayList<PointBean> points;
         points = new ArrayList<>();

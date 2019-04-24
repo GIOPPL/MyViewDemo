@@ -69,6 +69,16 @@ public class MyPath {
         return arrowPoints;
     }
 
+    //因为上一个动画结束以后，没有向上移动，所以添加偏移量
+    public static float arrowOffset;
+    public static void setArrowPointsOffset(){
+        for (int i=0;i<arrowPoints.size();i++){
+            arrowPoints.get(i).setY(arrowPoints.get(i).getY()-arrowOffset);
+        }
+    }
+
+
+
     /**
      * 画一条直线
      * @param pointCircle
@@ -90,5 +100,27 @@ public class MyPath {
         linePoints.add(point3);
         linePoints.add(point4);
         return linePoints;
+    }
+
+    /**
+     * 贝塞尔路径图，标牌跳动的路径
+     * @return
+     */
+    public static ArrayList<PointBean> skipPoints;
+    public static ArrayList<PointBean> skipWayPath(PointBean bean){
+        skipPoints = new ArrayList<>();
+        float startX =(circlePoints.get(0).getX()+circlePoints.get(8).getX())/2;
+        float startY =circlePoints.get(0).getY();
+        float endX=circlePoints.get(0).getX();
+        float endY =circlePoints.get(0).getY();
+        PointBean point1=new PointBean(startX,startY);
+        PointBean point2=new PointBean(startX+(endX-startX)/3,startY-bean.getR()*3);
+        PointBean point3=new PointBean(startX+(endX-startX)/3*2,startY-bean.getR()*3);
+        PointBean point4=new PointBean(endX,endY);
+        skipPoints.add(point1);
+        skipPoints.add(point2);
+        skipPoints.add(point3);
+        skipPoints.add(point4);
+        return skipPoints;
     }
 }

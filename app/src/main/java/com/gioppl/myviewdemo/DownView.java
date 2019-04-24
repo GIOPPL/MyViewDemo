@@ -33,7 +33,7 @@ public class DownView extends View {
 
 
     //画笔
-    public Paint paint_black_fill_5, paint_white_stroke_15, paint_black_stroke_15, paint_white_fill_5;
+    public Paint paint_black_fill_5, paint_white_stroke_15, paint_black_stroke_5, paint_white_fill_5;
 
 
     //动画的value
@@ -56,7 +56,7 @@ public class DownView extends View {
         pointCircle2 = new PointBean(700, 500, 100);
         paint_black_fill_5 = MyPaint.getPaintByAntiAliasAndDither(Color.BLACK, Paint.Style.FILL, 5);
         paint_white_stroke_15 = MyPaint.getPaintByAntiAliasAndDither(Color.WHITE, Paint.Style.STROKE, 15);
-        paint_black_stroke_15 = MyPaint.getPaintByAntiAliasAndDither(Color.BLACK, Paint.Style.STROKE, 15);
+        paint_black_stroke_5 = MyPaint.getPaintByAntiAliasAndDither(Color.BLACK, Paint.Style.STROKE, 5);
         paint_white_fill_5 = MyPaint.getPaintByAntiAliasAndDither(Color.WHITE, Paint.Style.FILL, 5);
     }
 
@@ -64,23 +64,27 @@ public class DownView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.save();
+
         switch (moveStatus){
             case STATUS0://由饼变成圆
                 MyCanvas.drawCircle(canvas, value_disk_to_circle, paint_white_fill_5, this, pointCircle, MyPath.BezierCircle(pointCircle));//饼渐变圆
-                MyCanvas.drawArrow(canvas, value_arrow_to_scutcheon, paint_black_fill_5, MyPath.arrowPath(pointCircle));//箭头
+                MyCanvas.drawArrow(canvas, value_arrow_to_scutcheon, paint_black_fill_5, MyPath.arrowPath(pointCircle));//静止箭头
+
                 break;
             case STATUS1://由圆变成弧线
-                MyCanvas.drawArrow(canvas, value_arrow_to_scutcheon, paint_black_fill_5, MyPath.arrowPath(pointCircle));//箭头
+                MyCanvas.drawArrow(canvas, value_arrow_to_scutcheon, paint_black_fill_5, MyPath.arrowPath(pointCircle));//静止箭头箭头
                 MyCanvas.drawCircleLine4_2(canvas, value_circle_to_line, paint_white_stroke_15, this, pointCircle, MyPath.BezierCircle(pointCircle));//四个点的贝塞尔圆
                 break;
             case STATUS2://弧线变直伴随着箭头往上移动
-                MyCanvas.arrowUpToZeroLine(canvas, value_circle_to_line, paint_black_fill_5, MyPath.arrowPoints);//箭头
+                MyCanvas.arrowUpToZeroLine(canvas, value_circle_to_line, paint_black_fill_5, MyPath.arrowPoints);//上升箭头
                 MyCanvas.drawLineToStraighten(canvas, value_circle_to_line, paint_white_stroke_15, this, pointCircle, MyPath.circlePoints);//贝塞尔线
+                MyCanvas.drawSkipLine(canvas,paint_white_stroke_15,MyPath.skipWayPath(pointCircle));//画一条运动轨迹
                 break;
             case STATUS3://箭头跳起来伴随着箭头变成标牌和直线震动
-                MyCanvas.arrowUpToZeroLine(canvas, value_circle_to_line, paint_black_fill_5, MyPath.arrowPoints);//箭头
+
                 MyCanvas.drawStraightenLine(canvas, value_line_up_and_down, paint_white_stroke_15, MyPath.straightLinePath());//画一条直线
-                MyCanvas.drawScutcheon(canvas, value_circle_to_line, paint_black_stroke_15, MyPath.arrowPoints);//箭头
+                MyCanvas.drawScutcheon(canvas, value_arrow_to_scutcheon,skipPosition, paint_black_fill_5, MyPath.arrowPoints);//跳跃箭头
+                break;
         }
     }
 
@@ -89,6 +93,7 @@ public class DownView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                moveStatus=MoveStatus.STATUS0;
                 ValueAnimator valueAnimator = animationDiskToCircle();
                 valueAnimator.start();
                 break;
@@ -147,6 +152,8 @@ public class DownView extends View {
                     moveStatus=MoveStatus.STATUS3;
                     animationLineVibrate().start();
                     animationArrowToScutcheon().start();
+                    animationScutcheonSkip().start();
+                    MyPath.setArrowPointsOffset();//增加偏移量
                 }
             }
         });
@@ -154,7 +161,7 @@ public class DownView extends View {
         return controllerPointAnimation1;
     }
 
-    //让曲线向上突起，再向下
+    //让曲线震荡
     private ValueAnimator animationLineVibrate() {
         ValueAnimator controllerPointAnimation1 = ValueAnimator.ofInt(0, (int) pointCircle.getR(),-(int) pointCircle.getR(),(int) pointCircle.getR()/2,-(int) pointCircle.getR()/2,0);
         controllerPointAnimation1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -174,7 +181,7 @@ public class DownView extends View {
 
     //从箭头变成标牌的动画
     private ValueAnimator animationArrowToScutcheon() {
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, (int) pointCircle.getR());
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, (int) pointCircle.getR()/4);
         valueAnimator.setDuration(theAnimationExecuteTime);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -185,6 +192,26 @@ public class DownView extends View {
         });
         return valueAnimator;
     }
+
+    //贝塞尔路基图，箭头跳动的方向
+    public static float[] skipPosition={-1,-1};
+    private ValueAnimator animationScutcheonSkip() {
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, (int) MyCanvas.skipLathMeasure.getLength());
+        valueAnimator.setDuration(theAnimationExecuteTime);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (int) animation.getAnimatedValue();
+                // 获取当前点坐标封装到mCurrentPosition
+
+                MyCanvas.skipLathMeasure.getPosTan(value, skipPosition, null);
+                postInvalidate();
+            }
+        });
+        return valueAnimator;
+    }
+
 
 
 

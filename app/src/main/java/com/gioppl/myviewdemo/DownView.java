@@ -23,12 +23,14 @@ public class DownView extends View {
     //几种状态
     public static MoveStatus moveStatus = MoveStatus.STATUS0;//初始化最开始的状态为0
 
+
     public enum MoveStatus {
         STATUS0,
         STATUS1,
         STATUS2,
         STATUS3,
         STATUS4,
+        STATUS5,
         ERROR_STATUS
     }
 
@@ -44,6 +46,7 @@ public class DownView extends View {
     private int value_arrow_to_scutcheon;//箭头变成标牌
     private float value_simulate_x=0;//模拟下载0-100
     private float value_simulate_y=0;//模拟下载0-r/4
+    private float value_overturn=0;//标牌翻转0-180
 
 
     private long theAnimationExecuteTime = 500;//动画时间
@@ -92,6 +95,10 @@ public class DownView extends View {
             case STATUS4://画一条普通直线，两段
                 MyCanvas.drawNormalLine(canvas, value_simulate_x,value_simulate_y, paint_white_stroke_15, MyPath.normalPath());//画一条普通直线
                 MyCanvas.drawScutcheonDown(canvas, value_simulate_x,value_simulate_y, paint_black_fill_5,paint_white_stroke_35, MyPath.arrowPointsDown);//标牌下载的动画
+                break;
+            case STATUS5://标牌翻转180°
+                MyCanvas.drawNormalLine(canvas, value_simulate_x,value_simulate_y, paint_white_stroke_15, MyPath.normalPath());//画一条普通直线
+                MyCanvas.drawScutcheonOverturn(canvas, value_overturn, paint_black_fill_5,paint_white_stroke_35, MyPath.arrowPointsDownSuccess);//翻转动画
                 break;
         }
     }
@@ -232,6 +239,10 @@ public class DownView extends View {
             public void onAnimationUpdate(ValueAnimator animation) {
                 value_simulate_x = (float) animation.getAnimatedValue();
                 invalidate();
+                if (value_simulate_x>=100){
+                    moveStatus=MoveStatus.STATUS5;
+                    animationScutcheonOverturn().start();
+                }
             }
         });
         return valueAnimator;
@@ -250,7 +261,19 @@ public class DownView extends View {
         return valueAnimator;
     }
 
-
+    //下载完成以后，标牌翻转360度的动画
+    private ValueAnimator animationScutcheonOverturn() {
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0,360);
+        valueAnimator.setDuration(theAnimationExecuteTime);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                value_overturn = (float) animation.getAnimatedValue();
+                invalidate();
+            }
+        });
+        return valueAnimator;
+    }
 
 
 

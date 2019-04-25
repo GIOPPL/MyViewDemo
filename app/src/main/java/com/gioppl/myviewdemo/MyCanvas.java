@@ -1,6 +1,7 @@
 package com.gioppl.myviewdemo;
 
 import android.animation.ValueAnimator;
+import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -300,27 +301,17 @@ public class MyCanvas {
 //        canvas.drawPath(linePath,paint);
     }
 
-    public static void drawPoint(Canvas canvas, Paint paint,float[] skipPosition){
-        canvas.drawPoint(skipPosition[0],skipPosition[1],paint);
-    }
 
     //下载的普通的直线
     public static void drawNormalLine(Canvas canvas, float value_x,float value_y, Paint paint,ArrayList<PointBean> points){
         float x=(points.get(2).getX()-points.get(0).getX())/100*value_x;
-        Path normalPath=new Path();
-
-
-//        normalPath.moveTo(points.get(0).getX(),points.get(0).getY());
-//        normalPath.lineTo(points.get(1).getX()+x,points.get(1).getY()+value_y);
-//        normalPath.lineTo(points.get(2).getX(),points.get(2).getY());
-//        canvas.drawPath(normalPath,paint);
         paint.setColor(Color.BLACK);
         canvas.drawLine(points.get(0).getX(),points.get(0).getY(),points.get(1).getX()+x,points.get(1).getY()+value_y,paint);
         paint.setColor(Color.WHITE);
         canvas.drawLine(points.get(1).getX()+x,points.get(1).getY()+value_y,points.get(2).getX(),points.get(2).getY(),paint);
     }
 
-    //下载的时候标牌的动画
+    //下载的时候标牌的动画,进度条
     public static void drawScutcheonDown(Canvas canvas, float value_x,float value_y, Paint paint,Paint textPaint,ArrayList<PointBean> points) {
         float x=(MyPath.circlePoints.get(8).getX()-MyPath.circlePoints.get(0).getX())/100*value_x;
         Path arrowPath = new Path();
@@ -333,10 +324,58 @@ public class MyCanvas {
         arrowPath.lineTo(points.get(5).getX()+x, points.get(5).getY()+value_y);
         arrowPath.lineTo(points.get(6).getX()+x, points.get(6).getY()+value_y);
         arrowPath.lineTo(points.get(0).getX()+x, points.get(0).getY()+value_y);
-        canvas.drawPath(arrowPath,paint);
-        if ((int)value_x!=100)
+
+
+
+
+
+        //写字
+        if ((int)value_x!=100){
+            canvas.drawPath(arrowPath,paint);
             canvas.drawText((int)value_x+"%",points.get(1).getX()+x+20, points.get(1).getY()+value_y-10,textPaint);
-        else
+        }else{
+
+            canvas.drawPath(arrowPath,paint);
             canvas.drawText((int)value_x+"%",points.get(1).getX()+x+10, points.get(1).getY()+value_y-10,textPaint);
+        }
+
+        //存储
+        MyPath.arrowPointsDownSuccess=new ArrayList<>();
+        MyPath.arrowPointsDownSuccess.add(new PointBean(points.get(0).getX()+x, points.get(0).getY()+value_y));
+        MyPath.arrowPointsDownSuccess.add(new PointBean(points.get(1).getX()+x, points.get(1).getY()+value_y));
+        MyPath.arrowPointsDownSuccess.add(new PointBean(points.get(2).getX()+x, points.get(2).getY()+value_y));
+        MyPath.arrowPointsDownSuccess.add(new PointBean(points.get(3).getX()+x, points.get(3).getY()+value_y));
+        MyPath.arrowPointsDownSuccess.add(new PointBean(points.get(4).getX()+x, points.get(4).getY()+value_y));
+        MyPath.arrowPointsDownSuccess.add(new PointBean(points.get(5).getX()+x, points.get(5).getY()+value_y));
+        MyPath.arrowPointsDownSuccess.add(new PointBean(points.get(6).getX()+x, points.get(6).getY()+value_y));
     }
+    //下载成功的时候标牌抖一个激灵，然后翻转
+    public static void drawScutcheonOverturn(Canvas canvas,float value, Paint paint,Paint textPaint,ArrayList<PointBean> points){
+        Path arrowPath = new Path();
+        arrowPath.moveTo(MyPath.arrowPointsDownSuccess.get(0).getX(), MyPath.arrowPointsDownSuccess.get(0).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(1).getX(), MyPath.arrowPointsDownSuccess.get(1).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(2).getX(), MyPath.arrowPointsDownSuccess.get(2).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(3).getX(), MyPath.arrowPointsDownSuccess.get(3).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(4).getX(), MyPath.arrowPointsDownSuccess.get(4).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(5).getX(), MyPath.arrowPointsDownSuccess.get(5).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(6).getX(), MyPath.arrowPointsDownSuccess.get(6).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(0).getX(), MyPath.arrowPointsDownSuccess.get(0).getY());
+
+        //移动相机
+        canvas.save();
+        float x_center=(MyPath.arrowPointsDownSuccess.get(6).getX()+MyPath.arrowPointsDownSuccess.get(0).getX())/2;
+        float y_center=(MyPath.arrowPointsDownSuccess.get(1).getY()+MyPath.arrowPointsDownSuccess.get(0).getY())/2;
+        Camera camera=new Camera();
+        camera.save(); // 保存 Camera 的状态
+        camera.rotateY(value); // 旋转 Camera 的三维空间
+        canvas.translate(x_center, y_center); // 旋转之后把投影移动回来
+        camera.applyToCanvas(canvas); // 把旋转投影到 Canvas
+        canvas.translate(-x_center, -y_center); // 旋转之前把绘制内容移动到轴心（原点）
+        camera.restore(); // 恢复 Camera 的状态
+        canvas.drawPath(arrowPath,paint);
+
+        canvas.drawText("100%",MyPath.arrowPointsDownSuccess.get(1).getX()+10, MyPath.arrowPointsDownSuccess.get(1).getY()-10,textPaint);
+        canvas.restore();
+    }
+
 }

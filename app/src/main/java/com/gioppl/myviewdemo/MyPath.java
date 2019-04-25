@@ -47,6 +47,7 @@ public class MyPath {
      */
     public static ArrayList<PointBean> arrowPoints;
     public static ArrayList<PointBean> arrowPointsDown;
+    public static ArrayList<PointBean> arrowPointsDownSuccess;
     public static ArrayList<PointBean> arrowPath(PointBean pointCircle) {
 
         arrowPoints = new ArrayList<>();

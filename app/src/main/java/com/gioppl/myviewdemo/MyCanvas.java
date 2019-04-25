@@ -308,10 +308,16 @@ public class MyCanvas {
     public static void drawNormalLine(Canvas canvas, float value_x,float value_y, Paint paint,ArrayList<PointBean> points){
         float x=(points.get(2).getX()-points.get(0).getX())/100*value_x;
         Path normalPath=new Path();
-        normalPath.moveTo(points.get(0).getX(),points.get(0).getY());
-        normalPath.lineTo(points.get(1).getX()+x,points.get(1).getY()+value_y);
-        normalPath.lineTo(points.get(2).getX(),points.get(2).getY());
-        canvas.drawPath(normalPath,paint);
+
+
+//        normalPath.moveTo(points.get(0).getX(),points.get(0).getY());
+//        normalPath.lineTo(points.get(1).getX()+x,points.get(1).getY()+value_y);
+//        normalPath.lineTo(points.get(2).getX(),points.get(2).getY());
+//        canvas.drawPath(normalPath,paint);
+        paint.setColor(Color.BLACK);
+        canvas.drawLine(points.get(0).getX(),points.get(0).getY(),points.get(1).getX()+x,points.get(1).getY()+value_y,paint);
+        paint.setColor(Color.WHITE);
+        canvas.drawLine(points.get(1).getX()+x,points.get(1).getY()+value_y,points.get(2).getX(),points.get(2).getY(),paint);
     }
 
     //下载的时候标牌的动画

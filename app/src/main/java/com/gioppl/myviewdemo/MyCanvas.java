@@ -349,7 +349,7 @@ public class MyCanvas {
         MyPath.arrowPointsDownSuccess.add(new PointBean(points.get(5).getX()+x, points.get(5).getY()+value_y));
         MyPath.arrowPointsDownSuccess.add(new PointBean(points.get(6).getX()+x, points.get(6).getY()+value_y));
     }
-    //下载成功的时候标牌抖一个激灵，然后翻转
+    //下载成功的时候翻转
     public static void drawScutcheonOverturn(Canvas canvas,float value, Paint paint,Paint textPaint,ArrayList<PointBean> points){
         Path arrowPath = new Path();
         arrowPath.moveTo(MyPath.arrowPointsDownSuccess.get(0).getX(), MyPath.arrowPointsDownSuccess.get(0).getY());
@@ -361,7 +361,7 @@ public class MyCanvas {
         arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(6).getX(), MyPath.arrowPointsDownSuccess.get(6).getY());
         arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(0).getX(), MyPath.arrowPointsDownSuccess.get(0).getY());
 
-        //移动相机
+        //移动相机，重难点，这几行代码我学习了一下午。
         canvas.save();
         float x_center=(MyPath.arrowPointsDownSuccess.get(6).getX()+MyPath.arrowPointsDownSuccess.get(0).getX())/2;
         float y_center=(MyPath.arrowPointsDownSuccess.get(1).getY()+MyPath.arrowPointsDownSuccess.get(0).getY())/2;
@@ -373,8 +373,32 @@ public class MyCanvas {
         canvas.translate(-x_center, -y_center); // 旋转之前把绘制内容移动到轴心（原点）
         camera.restore(); // 恢复 Camera 的状态
         canvas.drawPath(arrowPath,paint);
+        canvas.drawText("OK",MyPath.arrowPointsDownSuccess.get(1).getX()+20, MyPath.arrowPointsDownSuccess.get(1).getY()-15,textPaint);
+        canvas.restore();
+    }
 
-        canvas.drawText("100%",MyPath.arrowPointsDownSuccess.get(1).getX()+10, MyPath.arrowPointsDownSuccess.get(1).getY()-10,textPaint);
+    //标牌抖一个激灵，value 0->20°->-20°
+    public static void drawShakeScutcheon(Canvas canvas,float value, Paint paint,Paint textPaint){
+        float x_center=MyPath.arrowPointsDownSuccess.get(3).getX();
+        float y_center=MyPath.arrowPointsDownSuccess.get(3).getY();
+        Path arrowPath = new Path();
+        arrowPath.moveTo(MyPath.arrowPointsDownSuccess.get(0).getX(), MyPath.arrowPointsDownSuccess.get(0).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(1).getX(), MyPath.arrowPointsDownSuccess.get(1).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(2).getX(), MyPath.arrowPointsDownSuccess.get(2).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(3).getX(), MyPath.arrowPointsDownSuccess.get(3).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(4).getX(), MyPath.arrowPointsDownSuccess.get(4).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(5).getX(), MyPath.arrowPointsDownSuccess.get(5).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(6).getX(), MyPath.arrowPointsDownSuccess.get(6).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(0).getX(), MyPath.arrowPointsDownSuccess.get(0).getY());
+        Camera camera=new Camera();
+        camera.save();
+        camera.rotateZ(value);
+        canvas.translate(x_center,y_center);
+        camera.applyToCanvas(canvas);
+        canvas.translate(-x_center,-y_center);
+        camera.restore();
+        canvas.drawPath(arrowPath,paint);
+        canvas.drawText("OK",MyPath.arrowPointsDownSuccess.get(1).getX()+20, MyPath.arrowPointsDownSuccess.get(1).getY()-15,textPaint);
         canvas.restore();
     }
 

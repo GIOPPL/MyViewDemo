@@ -24,6 +24,7 @@ public class DownView extends View {
     public static MoveStatus moveStatus = MoveStatus.STATUS0;//初始化最开始的状态为0
 
 
+
     public enum MoveStatus {
         STATUS0,
         STATUS1,
@@ -31,6 +32,7 @@ public class DownView extends View {
         STATUS3,
         STATUS4,
         STATUS5,
+        STATUS6,
         ERROR_STATUS
     }
 
@@ -47,6 +49,7 @@ public class DownView extends View {
     private float value_simulate_x=0;//模拟下载0-100
     private float value_simulate_y=0;//模拟下载0-r/4
     private float value_overturn=0;//标牌翻转0-180
+    private float value_shake=0;//抖一个激灵0->20->-20
 
 
     private long theAnimationExecuteTime = 500;//动画时间
@@ -99,6 +102,10 @@ public class DownView extends View {
             case STATUS5://标牌翻转180°
                 MyCanvas.drawNormalLine(canvas, value_simulate_x,value_simulate_y, paint_white_stroke_15, MyPath.normalPath());//画一条普通直线
                 MyCanvas.drawScutcheonOverturn(canvas, value_overturn, paint_black_fill_5,paint_white_stroke_35, MyPath.arrowPointsDownSuccess);//翻转动画
+                break;
+            case STATUS6://抖一个激灵
+                MyCanvas.drawNormalLine(canvas, value_simulate_x,value_simulate_y, paint_white_stroke_15, MyPath.normalPath());//画一条普通直线
+                MyCanvas.drawShakeScutcheon(canvas, value_shake, paint_black_fill_5,paint_white_stroke_35);//抖一个激灵
                 break;
         }
     }
@@ -269,6 +276,24 @@ public class DownView extends View {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 value_overturn = (float) animation.getAnimatedValue();
+                invalidate();
+                if (value_overturn>=360){
+                    moveStatus=MoveStatus.STATUS6;
+                    animationScutcheonShake().start();
+                }
+            }
+        });
+        return valueAnimator;
+    }
+
+    //标牌翻转360度的动画,以后抖一个激灵的动画
+    private ValueAnimator animationScutcheonShake() {
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0,20,-20);
+        valueAnimator.setDuration(theAnimationExecuteTime/2);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                value_shake = (float) animation.getAnimatedValue();
                 invalidate();
             }
         });

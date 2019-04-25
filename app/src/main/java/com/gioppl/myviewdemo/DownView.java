@@ -111,7 +111,7 @@ public class DownView extends View {
                 MyCanvas.drawShakeScutcheon(canvas, value_shake, paint_black_fill_5,paint_white_stroke_35);//抖一个激灵
                 break;
             case STATUS7://直线收缩
-                MyCanvas.drawShakeScutcheon(canvas, value_shake, paint_black_fill_5,paint_white_stroke_35);//抖一个激灵
+                MyCanvas.drawScutcheonMoveToPoint(canvas, value_shrink, paint_black_fill_5,paint_white_stroke_35);
                 MyCanvas.drawLineToPoint(canvas, value_shrink, paint_black_fill_5);
                 break;
         }

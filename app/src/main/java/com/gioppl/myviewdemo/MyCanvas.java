@@ -395,4 +395,59 @@ public class MyCanvas {
         canvas.drawLine(point0.getX()+value,point0.getY(),point1.getX(),point1.getY(),paint);
         canvas.drawLine(point1.getX(),point1.getY(),point2.getX()-value,point2.getY(),paint);
     }
+
+    //直线收缩的动画
+    public static void drawScutcheonMoveToPoint(Canvas canvas,float value, Paint paint,Paint textPaint){
+        float x_center=MyPath.arrowPointsDownSuccess.get(3).getX();
+        float y_center=MyPath.arrowPointsDownSuccess.get(3).getY();
+
+        Path arrowPath = new Path();
+        arrowPath.moveTo(MyPath.arrowPointsDownSuccess.get(0).getX()-value, MyPath.arrowPointsDownSuccess.get(0).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(1).getX()-value, MyPath.arrowPointsDownSuccess.get(1).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(2).getX()-value, MyPath.arrowPointsDownSuccess.get(2).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(3).getX()-value, MyPath.arrowPointsDownSuccess.get(3).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(4).getX()-value, MyPath.arrowPointsDownSuccess.get(4).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(5).getX()-value, MyPath.arrowPointsDownSuccess.get(5).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(6).getX()-value, MyPath.arrowPointsDownSuccess.get(6).getY());
+        arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(0).getX()-value, MyPath.arrowPointsDownSuccess.get(0).getY());
+//        canvas.drawPath(arrowPath,paint);
+//        canvas.drawText("OK",MyPath.arrowPointsDownSuccess.get(1).getX()-value+20, MyPath.arrowPointsDownSuccess.get(1).getY()-15,textPaint);
+//        canvas.restore();
+
+
+//        Camera camera=new Camera();
+//        camera.save();
+//        camera.rotateZ(20);
+//        canvas.translate(x_center,y_center);
+//        camera.applyToCanvas(canvas);
+//        canvas.translate(-x_center,-y_center);
+//        camera.restore();
+        canvas.drawPath(arrowPath,paint);
+        canvas.drawText("OK",MyPath.arrowPointsDownSuccess.get(1).getX()-value+20, MyPath.arrowPointsDownSuccess.get(1).getY()-15,textPaint);
+//        canvas.restore();
+
+
+        //存储
+//        MyPath.arrowPointsDownSuccess.get(0).setCirclePoint(MyPath.arrowPointsDownSuccess.get(0).getX(),  MyPath.arrowPointsDownSuccess.get(0).getY());
+//        MyPath.arrowPointsDownSuccess.get(1).setCirclePoint(MyPath.arrowPointsDownSuccess.get(1).getX(),  MyPath.arrowPointsDownSuccess.get(1).getY());
+//        MyPath.arrowPointsDownSuccess.get(2).setCirclePoint(MyPath.arrowPointsDownSuccess.get(2).getX(),  MyPath.arrowPointsDownSuccess.get(2).getY());
+//        MyPath.arrowPointsDownSuccess.get(3).setCirclePoint(MyPath.arrowPointsDownSuccess.get(3).getX(),  MyPath.arrowPointsDownSuccess.get(3).getY());
+//        MyPath.arrowPointsDownSuccess.get(4).setCirclePoint(MyPath.arrowPointsDownSuccess.get(4).getX(),  MyPath.arrowPointsDownSuccess.get(4).getY());
+//        MyPath.arrowPointsDownSuccess.get(5).setCirclePoint(MyPath.arrowPointsDownSuccess.get(5).getX(),  MyPath.arrowPointsDownSuccess.get(5).getY());
+//        MyPath.arrowPointsDownSuccess.get(6).setCirclePoint(MyPath.arrowPointsDownSuccess.get(6).getX(),  MyPath.arrowPointsDownSuccess.get(6).getY());
+
+
+
+
+//        MyPath.arrowPointsDownSuccess.add(new PointBean(MyPath.arrowPointsDownSuccess.get(0).getX()-value,  MyPath.arrowPointsDownSuccess.get(0).getY()));
+//        MyPath.arrowPointsDownSuccess.add(new PointBean(MyPath.arrowPointsDownSuccess.get(1).getX()-value,  MyPath.arrowPointsDownSuccess.get(1).getY()));
+//        MyPath.arrowPointsDownSuccess.add(new PointBean(MyPath.arrowPointsDownSuccess.get(2).getX()-value,  MyPath.arrowPointsDownSuccess.get(2).getY()));
+//        MyPath.arrowPointsDownSuccess.add(new PointBean(MyPath.arrowPointsDownSuccess.get(3).getX()-value,  MyPath.arrowPointsDownSuccess.get(3).getY()));
+//        MyPath.arrowPointsDownSuccess.add(new PointBean(MyPath.arrowPointsDownSuccess.get(4).getX()-value,  MyPath.arrowPointsDownSuccess.get(4).getY()));
+//        MyPath.arrowPointsDownSuccess.add(new PointBean(MyPath.arrowPointsDownSuccess.get(5).getX()-value,  MyPath.arrowPointsDownSuccess.get(5).getY()));
+//        MyPath.arrowPointsDownSuccess.add(new PointBean(MyPath.arrowPointsDownSuccess.get(6).getX()-value,  MyPath.arrowPointsDownSuccess.get(6).getY()));
+//        for (int i=0;i<7;i++){
+//            MyPath.arrowPointsDownSuccess.remove(i);
+//        }
+    }
 }

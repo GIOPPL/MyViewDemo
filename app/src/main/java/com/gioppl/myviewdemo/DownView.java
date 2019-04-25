@@ -33,7 +33,9 @@ public class DownView extends View {
         STATUS4,
         STATUS5,
         STATUS6,
-        ERROR_STATUS
+        STATUS7,
+        ERROR_STATUS;
+
     }
 
 
@@ -50,6 +52,7 @@ public class DownView extends View {
     private float value_simulate_y=0;//模拟下载0-r/4
     private float value_overturn=0;//标牌翻转0-180
     private float value_shake=0;//抖一个激灵0->20->-20
+    private float value_shrink=0;//收缩
 
 
     private long theAnimationExecuteTime = 500;//动画时间
@@ -106,6 +109,10 @@ public class DownView extends View {
             case STATUS6://抖一个激灵
                 MyCanvas.drawNormalLine(canvas, value_simulate_x,value_simulate_y, paint_white_stroke_15, MyPath.normalPath());//画一条普通直线
                 MyCanvas.drawShakeScutcheon(canvas, value_shake, paint_black_fill_5,paint_white_stroke_35);//抖一个激灵
+                break;
+            case STATUS7://直线收缩
+                MyCanvas.drawShakeScutcheon(canvas, value_shake, paint_black_fill_5,paint_white_stroke_35);//抖一个激灵
+                MyCanvas.drawLineToPoint(canvas, value_shrink, paint_black_fill_5);
                 break;
         }
     }
@@ -295,12 +302,28 @@ public class DownView extends View {
             public void onAnimationUpdate(ValueAnimator animation) {
                 value_shake = (float) animation.getAnimatedValue();
                 invalidate();
+                if (value_shake<=-20){
+                    animationLineToPoint().start();
+                    moveStatus=MoveStatus.STATUS7;
+                }
             }
         });
         return valueAnimator;
     }
 
-
+    //直线快速收缩，最后留在原点
+    private ValueAnimator animationLineToPoint() {
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0,(MyPath.normalPath().get(2).getX()-MyPath.normalPath().get(0).getX())/2-2);
+        valueAnimator.setDuration(theAnimationExecuteTime/2);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                value_shrink = (float) animation.getAnimatedValue();
+                invalidate();
+            }
+        });
+        return valueAnimator;
+    }
 
 
 

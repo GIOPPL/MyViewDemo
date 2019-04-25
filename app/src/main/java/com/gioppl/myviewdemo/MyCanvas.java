@@ -278,15 +278,6 @@ public class MyCanvas {
             MyPath.arrowPointsDown.add(new PointBean(x+r/4+value, y-r/2));
             MyPath.arrowPointsDown.add(new PointBean(x+r/4+value, y-r));
         }
-
-//        arrowPath.moveTo(points.get(0).getX()-value, points.get(0).getY());
-//        arrowPath.lineTo(points.get(1).getX()-value, points.get(1).getY());
-//        arrowPath.lineTo(points.get(2).getX()+value, points.get(2).getY());
-//        arrowPath.lineTo(points.get(3).getX(), points.get(3).getY()-value);
-//        arrowPath.lineTo(points.get(4).getX()-value, points.get(4).getY());
-//        arrowPath.lineTo(points.get(5).getX()+value, points.get(5).getY());
-//        arrowPath.lineTo(points.get(6).getX()+value, points.get(6).getY());
-//        arrowPath.lineTo(points.get(0).getX()-value, points.get(0).getY());
         canvas.drawPath(arrowPath,paint);
     }
 
@@ -298,7 +289,6 @@ public class MyCanvas {
         linePath.cubicTo(points.get(1).getX(),points.get(1).getY(),points.get(2).getX(),points.get(2).getY(),points.get(3).getX(),points.get(3).getY()+20);
         skipLathMeasure=new PathMeasure();
         skipLathMeasure.setPath(linePath,false);//路径不闭合
-//        canvas.drawPath(linePath,paint);
     }
 
 
@@ -324,11 +314,6 @@ public class MyCanvas {
         arrowPath.lineTo(points.get(5).getX()+x, points.get(5).getY()+value_y);
         arrowPath.lineTo(points.get(6).getX()+x, points.get(6).getY()+value_y);
         arrowPath.lineTo(points.get(0).getX()+x, points.get(0).getY()+value_y);
-
-
-
-
-
         //写字
         if ((int)value_x!=100){
             canvas.drawPath(arrowPath,paint);
@@ -338,7 +323,6 @@ public class MyCanvas {
             canvas.drawPath(arrowPath,paint);
             canvas.drawText((int)value_x+"%",points.get(1).getX()+x+10, points.get(1).getY()+value_y-10,textPaint);
         }
-
         //存储
         MyPath.arrowPointsDownSuccess=new ArrayList<>();
         MyPath.arrowPointsDownSuccess.add(new PointBean(points.get(0).getX()+x, points.get(0).getY()+value_y));
@@ -402,4 +386,13 @@ public class MyCanvas {
         canvas.restore();
     }
 
+    //直线收缩的动画
+    public static void drawLineToPoint(Canvas canvas, float value, Paint paint){
+        PointBean point0=new PointBean(MyPath.normalPoints.get(0).getX(),MyPath.normalPath().get(0).getY());
+        PointBean point1=new PointBean((MyPath.normalPoints.get(2).getX()+MyPath.normalPoints.get(0).getX())/2,MyPath.normalPath().get(0).getY());
+        PointBean point2=new PointBean(MyPath.normalPoints.get(2).getX(),MyPath.normalPath().get(2).getY());
+
+        canvas.drawLine(point0.getX()+value,point0.getY(),point1.getX(),point1.getY(),paint);
+        canvas.drawLine(point1.getX(),point1.getY(),point2.getX()-value,point2.getY(),paint);
+    }
 }

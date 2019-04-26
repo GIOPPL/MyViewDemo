@@ -34,7 +34,7 @@ public class DownView extends View {
         STATUS5,
         STATUS6,
         STATUS7,
-        ERROR_STATUS;
+        STATUS8, ERROR_STATUS
 
     }
 
@@ -53,6 +53,7 @@ public class DownView extends View {
     private float value_overturn=0;//标牌翻转0-180
     private float value_shake=0;//抖一个激灵0->20->-20
     private float value_shrink=0;//收缩
+    private float value_show_circle=0;//出现圆盘
 
 
     private long theAnimationExecuteTime = 500;//动画时间
@@ -114,8 +115,15 @@ public class DownView extends View {
                 MyCanvas.drawScutcheonMoveToPoint(canvas, value_shrink, paint_black_fill_5,paint_white_stroke_35);
                 MyCanvas.drawLineToPoint(canvas, value_shrink, paint_black_fill_5);
                 break;
+            case STATUS8:
+                MyCanvas.drawScutcheonMoveToPoint(canvas, value_shrink, paint_black_fill_5,paint_white_stroke_35);
+                MyCanvas.drawCircleForSuccess(canvas, value_show_circle, paint_white_fill_5,pointCircle,paint_white_stroke_35);
+                break;
+
         }
     }
+
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -320,12 +328,28 @@ public class DownView extends View {
             public void onAnimationUpdate(ValueAnimator animation) {
                 value_shrink = (float) animation.getAnimatedValue();
                 invalidate();
+                if (value_shrink>=(MyPath.normalPath().get(2).getX()-MyPath.normalPath().get(0).getX())/2-2){
+                    moveStatus=MoveStatus.STATUS8;
+                    animationShowCircle().start();
+                }
             }
         });
         return valueAnimator;
     }
 
-
+    //圆盘出现
+    private ValueAnimator animationShowCircle() {
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(1,pointCircle.getR());
+        valueAnimator.setDuration(theAnimationExecuteTime/5);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                value_show_circle = (float) animation.getAnimatedValue();
+                invalidate();
+            }
+        });
+        return valueAnimator;
+    }
 
 
 

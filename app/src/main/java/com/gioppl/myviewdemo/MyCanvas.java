@@ -398,8 +398,7 @@ public class MyCanvas {
 
     //直线收缩的动画
     public static void drawScutcheonMoveToPoint(Canvas canvas,float value, Paint paint,Paint textPaint){
-        float x_center=MyPath.arrowPointsDownSuccess.get(3).getX();
-        float y_center=MyPath.arrowPointsDownSuccess.get(3).getY();
+
 
         Path arrowPath = new Path();
         arrowPath.moveTo(MyPath.arrowPointsDownSuccess.get(0).getX()-value, MyPath.arrowPointsDownSuccess.get(0).getY());
@@ -410,44 +409,17 @@ public class MyCanvas {
         arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(5).getX()-value, MyPath.arrowPointsDownSuccess.get(5).getY());
         arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(6).getX()-value, MyPath.arrowPointsDownSuccess.get(6).getY());
         arrowPath.lineTo(MyPath.arrowPointsDownSuccess.get(0).getX()-value, MyPath.arrowPointsDownSuccess.get(0).getY());
-//        canvas.drawPath(arrowPath,paint);
-//        canvas.drawText("OK",MyPath.arrowPointsDownSuccess.get(1).getX()-value+20, MyPath.arrowPointsDownSuccess.get(1).getY()-15,textPaint);
-//        canvas.restore();
 
-
-//        Camera camera=new Camera();
-//        camera.save();
-//        camera.rotateZ(20);
-//        canvas.translate(x_center,y_center);
-//        camera.applyToCanvas(canvas);
-//        canvas.translate(-x_center,-y_center);
-//        camera.restore();
         canvas.drawPath(arrowPath,paint);
         canvas.drawText("OK",MyPath.arrowPointsDownSuccess.get(1).getX()-value+20, MyPath.arrowPointsDownSuccess.get(1).getY()-15,textPaint);
-//        canvas.restore();
 
+    }
 
-        //存储
-//        MyPath.arrowPointsDownSuccess.get(0).setCirclePoint(MyPath.arrowPointsDownSuccess.get(0).getX(),  MyPath.arrowPointsDownSuccess.get(0).getY());
-//        MyPath.arrowPointsDownSuccess.get(1).setCirclePoint(MyPath.arrowPointsDownSuccess.get(1).getX(),  MyPath.arrowPointsDownSuccess.get(1).getY());
-//        MyPath.arrowPointsDownSuccess.get(2).setCirclePoint(MyPath.arrowPointsDownSuccess.get(2).getX(),  MyPath.arrowPointsDownSuccess.get(2).getY());
-//        MyPath.arrowPointsDownSuccess.get(3).setCirclePoint(MyPath.arrowPointsDownSuccess.get(3).getX(),  MyPath.arrowPointsDownSuccess.get(3).getY());
-//        MyPath.arrowPointsDownSuccess.get(4).setCirclePoint(MyPath.arrowPointsDownSuccess.get(4).getX(),  MyPath.arrowPointsDownSuccess.get(4).getY());
-//        MyPath.arrowPointsDownSuccess.get(5).setCirclePoint(MyPath.arrowPointsDownSuccess.get(5).getX(),  MyPath.arrowPointsDownSuccess.get(5).getY());
-//        MyPath.arrowPointsDownSuccess.get(6).setCirclePoint(MyPath.arrowPointsDownSuccess.get(6).getX(),  MyPath.arrowPointsDownSuccess.get(6).getY());
-
-
-
-
-//        MyPath.arrowPointsDownSuccess.add(new PointBean(MyPath.arrowPointsDownSuccess.get(0).getX()-value,  MyPath.arrowPointsDownSuccess.get(0).getY()));
-//        MyPath.arrowPointsDownSuccess.add(new PointBean(MyPath.arrowPointsDownSuccess.get(1).getX()-value,  MyPath.arrowPointsDownSuccess.get(1).getY()));
-//        MyPath.arrowPointsDownSuccess.add(new PointBean(MyPath.arrowPointsDownSuccess.get(2).getX()-value,  MyPath.arrowPointsDownSuccess.get(2).getY()));
-//        MyPath.arrowPointsDownSuccess.add(new PointBean(MyPath.arrowPointsDownSuccess.get(3).getX()-value,  MyPath.arrowPointsDownSuccess.get(3).getY()));
-//        MyPath.arrowPointsDownSuccess.add(new PointBean(MyPath.arrowPointsDownSuccess.get(4).getX()-value,  MyPath.arrowPointsDownSuccess.get(4).getY()));
-//        MyPath.arrowPointsDownSuccess.add(new PointBean(MyPath.arrowPointsDownSuccess.get(5).getX()-value,  MyPath.arrowPointsDownSuccess.get(5).getY()));
-//        MyPath.arrowPointsDownSuccess.add(new PointBean(MyPath.arrowPointsDownSuccess.get(6).getX()-value,  MyPath.arrowPointsDownSuccess.get(6).getY()));
-//        for (int i=0;i<7;i++){
-//            MyPath.arrowPointsDownSuccess.remove(i);
-//        }
+    public static void drawCircleForSuccess(Canvas canvas,float value, Paint paint,PointBean circleBean,Paint textPaint){
+        canvas.drawCircle(circleBean.getX(),MyPath.arrowPointsDownSuccess.get(0).getY(),value,paint);
+//        textPaint.setTextSize(textPaint.getTextSize()*value/circleBean.getR());
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(40);
+        canvas.drawText("OK",circleBean.getX()-30,MyPath.arrowPointsDownSuccess.get(0).getY()+10,textPaint);
     }
 }
